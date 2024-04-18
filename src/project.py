@@ -27,6 +27,12 @@ class Target:
     def duration(self):
         return self.end - self.start
 
+    def get_name(self):
+        if self.compile_commands_entry is not None:
+            return self.compile_commands_entry["file"]
+        else:
+            return self.target
+
     def get_event(self):
         return {
             "name": os.path.basename(self.target),
@@ -57,10 +63,9 @@ class Target:
             return self.clang_trace
 
 @dataclass
-class PhonyTarget:
-    start: int
-    end: int
-    target: str
+class TimingEntry:
+    duration: int
+    name: str
 
 class Project:
     def __init__(self, project_folder: Path, build_folder: Path):
@@ -180,15 +185,34 @@ class Project:
                 events.append(event)
         return events
 
-    def get_slow_targets(self, n=20):
-        targets = sorted(self.targets, key=lambda target: target.duration, reverse=True)
-        entries = targets[:n]
+    def get_slow_targets(self, target_filter = lambda _: True, n=20):
+        targets = filter(target_filter, self.targets)
+        targets = sorted(targets, key=lambda target: target.duration, reverse=True)
+        entries = list(map(lambda target: TimingEntry(target.duration, target.get_name()), targets[:n]))
         if len(targets) > n:
             entries.append(
-                PhonyTarget(
-                    start=0,
-                    end=sum(map(lambda target: target.duration, targets[n:])),
-                    target="Other"
+                TimingEntry(
+                    duration=sum(map(lambda target: target.duration, targets[n:])),
+                    name="Other"
                 )
             )
         return entries
+
+    def get_frontend_backend_totals(self):
+        frontend = 0
+        backend = 0
+
+        for target in self.targets:
+            last_frontend_end = 0
+            last_backend_end = 0
+            for event in target.get_clang_trace_events():
+                if event["name"] == "Frontend":
+                    assert event["ts"] >= last_frontend_end
+                    frontend += event["dur"]
+                    last_frontend_end = event["ts"] + event["dur"]
+                elif event["name"] == "Backend":
+                    assert event["ts"] >= last_backend_end
+                    backend += event["dur"]
+                    last_backend_end = event["ts"] + event["dur"]
+
+        return [TimingEntry(frontend // 1000, "Frontend"), TimingEntry(backend // 1000, "Backend")]
