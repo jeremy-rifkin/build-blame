@@ -11,6 +11,7 @@ Preview:
 
 ![](screenshots/preview.png)
 ![](screenshots/full-trace.png)
+![](screenshots/includes.svg)
 
 
 
@@ -24,5 +25,5 @@ cmake -B build -S . -DCMAKE_CXX_COMPILER=clang++-17 -DCMAKE_C_COMPILER=clang-17 
 
 Then
 ```
-python3 main.py --project-folder /path/to/project/ --build-folder /path/to/project/build --output out
+python3 main.py --project-folder /path/to/project --output out
 ```

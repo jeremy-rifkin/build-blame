@@ -1,14 +1,7 @@
-import argparse
-import colorama
-from enum import Enum
 import os
 import re
-import sys
-import json
 import math
 import logging
-from pathlib import Path
-import subprocess
 
 #
 # Originally from https://github.com/jeremy-rifkin/cpp-dependency-analyzer
@@ -240,7 +233,7 @@ def parse_includes(path: str) -> list:
                 token = tokens.pop(0)
     return includes
 
-class Analysis:
+class DependencyAnalysis:
     def __init__(self, excludes: list, sentinels: list):
         self.excludes = excludes
         self.sentinels = sentinels
@@ -325,23 +318,62 @@ class Analysis:
                 for j in range(N):
                     G[i][j] = G[i][j] or (G[i][k] and G[k][j])
 
-def print_header(matrix, labels):
-    print(" " * 50, end="")
-    for i in range(len(matrix)):
-        print(" {}".format(os.path.basename(labels[i])[0]), end="")
-    print()
-
-def print_matrix(matrix, labels):
-    color = os.isatty(1)
-    for i, row in enumerate(matrix):
-        print("{:>50} ".format(os.path.basename(labels[i])), end="")
-        for j, n in enumerate(row):
-            if i == j:
-                print("{}{}{} ".format(colorama.Fore.BLUE if color else "", "#" if n else "~", colorama.Style.RESET_ALL if color else ""), end="")
+    def generate_graphviz(self, target_times: dict, include_transitive=False):
+        labels = [k for k in self.nodes.keys()]
+        greens = [
+            "#EAEFE9",
+            "#D9E9D5",
+            "#BDDDB6",
+            "#99CE93",
+            "#6EBA70",
+            "#3EA258",
+            "#218441",
+            "#00672A",
+            "#00411A",
+        ]
+        graphviz = ""
+        graphviz += "digraph G {\n"
+        counts = count_incident_edges(self.matrix_closure, labels, True)
+        max_count = max(counts.values())
+        max_time = max(target_times.values())
+        def get_color(label: str):
+            if label in target_times:
+                return f"\"{greens[min(int(math.floor((target_times[label] / max_time) * 9)), 8)]}\""
+            elif label in counts:
+                return min(int(math.floor((counts[label] / max_count) * 9)) + 1, 9)
             else:
-                print("{} ".format("#" if n else "~"), end="")
-        print()
-    print()
+                return "white"
+        graphviz += "\tsubgraph cluster_{} {{".format("direct") + "\n"
+        graphviz += "\t\tnode [colorscheme=reds9] # Apply colorscheme to all nodes\n"
+        graphviz += "\t\tlabel=\"{}\";".format("direct dependencies") + "\n"
+        for i in range(len(labels)):
+            graphviz += "\t\tn{} [label=\"{}\", fillcolor={}, style=\"filled,solid\"];".format(i, os.path.basename(labels[i]), get_color(labels[i])) + "\n"
+        graphviz += "\t\t"
+        for i, row in enumerate(self.matrix):
+            for j, v in enumerate(row):
+                if v:
+                    graphviz += "n{}->n{};".format(i, j)
+        graphviz += "\n"
+        graphviz += "\t}\n"
+
+        if include_transitive:
+            offset = len(labels)
+            graphviz += "\tsubgraph cluster_{} {{".format("indirect") + "\n"
+            graphviz += "\t\tnode [colorscheme=reds9] # Apply colorscheme to all nodes" + "\n"
+            graphviz += "\t\tlabel=\"{}\";".format("dependency transitive closure") + "\n"
+            for i in range(len(labels)):
+                graphviz += "\t\tn{} [label=\"{}\", fillcolor={}, style=\"filled,solid\"];".format(i + offset, os.path.basename(labels[i]), get_color(labels[i])) + "\n"
+            graphviz += "\t\t"
+            for i, row in enumerate(self.matrix_closure):
+                for j, v in enumerate(row):
+                    if v:
+                        graphviz += "n{}->n{}[color={}];".format(i + offset, j + offset, "black" if self.matrix[i][j] else "orange")
+            graphviz += "\n"
+            graphviz += "\t}\n"
+
+        graphviz += "}\n"
+
+        return graphviz
 
 def count_incident_edges(matrix, labels, tu_only=False):
     counts = {} # label -> count
@@ -357,92 +389,6 @@ def count_incident_edges(matrix, labels, tu_only=False):
                     counts[labels[col]] = 1
     return counts
 
-def generate_graphviz(analysis: Analysis, labels: list, include_transitive=False):
-    graphviz = ""
-    graphviz += "digraph G {\n"
-    counts = count_incident_edges(analysis.matrix_closure, labels, True)
-    max_count = max(counts.values())
-    def get_count_color(label: str):
-        if label in counts:
-            return min(int(math.floor((counts[label] / max_count) * 9)) + 1, 9)
-        else:
-            return "white"
-    graphviz += "\tsubgraph cluster_{} {{".format("direct") + "\n"
-    graphviz += "\t\tnode [colorscheme=reds9] # Apply colorscheme to all nodes\n"
-    graphviz += "\t\tlabel=\"{}\";".format("direct dependencies") + "\n"
-    for i in range(len(labels)):
-        graphviz += "\t\tn{} [label=\"{}\", fillcolor={}, style=\"filled,solid\"];".format(i, os.path.basename(labels[i]), get_count_color(labels[i])) + "\n"
-    graphviz += "\t\t"
-    for i, row in enumerate(analysis.matrix):
-        for j, v in enumerate(row):
-            if v:
-                graphviz += "n{}->n{};".format(i, j)
-    graphviz += "\n"
-    graphviz += "\t}\n"
-
-    if include_transitive:
-        offset = len(labels)
-        graphviz += "\tsubgraph cluster_{} {{".format("indirect") + "\n"
-        graphviz += "\t\tnode [colorscheme=reds9] # Apply colorscheme to all nodes" + "\n"
-        graphviz += "\t\tlabel=\"{}\";".format("dependency transitive closure") + "\n"
-        for i in range(len(labels)):
-            graphviz += "\t\tn{} [label=\"{}\", fillcolor={}, style=\"filled,solid\"];".format(i + offset, os.path.basename(labels[i]), get_count_color(labels[i])) + "\n"
-        graphviz += "\t\t"
-        for i, row in enumerate(analysis.matrix_closure):
-            for j, v in enumerate(row):
-                if v:
-                    graphviz += "n{}->n{}[color={}];".format(i + offset, j + offset, "black" if analysis.matrix[i][j] else "orange")
-        graphviz += "\n"
-        graphviz += "\t}\n"
-
-    graphviz += "}\n"
-
-    return graphviz
-
 def parse_search_paths(command: str) -> list:
     paths = [x.group(1) for x in re.finditer(r"-I([^ ]+)", command)]
-    # print("Search paths:", paths)
     return paths
-
-def file_path(string):
-    if os.path.isfile(string):
-        return string
-    else:
-        raise RuntimeError(f"Invalid file path {string}")
-
-def dir_path(string):
-    if os.path.isdir(string):
-        return string
-    else:
-        raise RuntimeError(f"Invalid directory {string}")
-
-# def analyze_project(build_folder: Path, output_dir: Path, exclude_deps: bool):
-#     compile_commands = build_folder / "compile_commands.json"
-#     with open(compile_commands, "r") as f:
-#         compile_commands = json.load(f)
-
-#     excludes = []
-#     sentinels = []
-
-#     if exclude_deps:
-#         excludes.append(str(build_folder / "_deps"))
-
-#     analysis = Analysis(excludes, sentinels)
-
-#     wd = os.getcwd()
-
-#     for entry in compile_commands:
-#         os.chdir(entry["directory"])
-#         logging.debug(f"From compile commands: {entry['file']}")
-#         # entry["command"] ...
-#         analysis.process_file(os.path.abspath(entry["file"]), parse_search_paths(entry["command"]))
-
-#     os.chdir(wd)
-
-#     analysis.build_matrix()
-
-#     labels = [k for k in analysis.nodes.keys()]
-#     with open(output_dir / "includes.gv", "w") as f:
-#         f.write(generate_graphviz(analysis, labels))
-
-#     subprocess.run(["dot", "-Tsvg", "-o", output_dir / "includes.svg", output_dir / "includes.gv"])

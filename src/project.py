@@ -3,13 +3,17 @@ from pathlib import Path
 import os
 import json
 from dataclasses import dataclass
+import logging
+
+from .dependency_analysis import DependencyAnalysis, parse_search_paths
 
 class Target:
-    def __init__(self, build_folder: Path, start: int, end: int, restat: int, target: str, command_hash: str):
+    def __init__(self, build_folder: Path, start: int, end: int, restat: int, target: str, compile_commands_entry, command_hash: str):
         self.build_folder = build_folder
         self.start = start # milliseconds
         self.end = end # milliseconds
         self.restat = restat
+        self.compile_commands_entry = compile_commands_entry
         self.target = target
         self.command_hash = command_hash
         self.tid = -1
@@ -17,12 +21,18 @@ class Target:
 
         self.load_clang_trace_events()
 
+        self.include_path = parse_search_paths(compile_commands_entry["command"]) if compile_commands_entry is not None else None
+
+    @property
+    def duration(self):
+        return self.end - self.start
+
     def get_event(self):
         return {
             "name": os.path.basename(self.target),
             "ph": "X",
             "ts": self.start * 1000,
-            "dur": (self.end - self.start) * 1000,
+            "dur": self.duration * 1000,
             "pid": 0,
             "tid": self.tid,
             "args": {
@@ -57,9 +67,27 @@ class Project:
         self.project_folder = project_folder
         self.build_folder = build_folder
         self.targets = []
+        self.exclude_deps = True
 
+        logging.info("Loading compile commands")
+        self.load_compile_commands()
+        logging.info("Loading targets")
         self.load_targets()
+        logging.info("Making thread assignments")
         self.try_to_make_thread_assignments()
+        logging.info("Analyzing includes")
+        self.analyze_includes()
+
+    def load_compile_commands(self):
+        compile_commands = self.build_folder / "compile_commands.json"
+        with open(compile_commands, "r") as f:
+            self.compile_commands = json.load(f)
+
+    def get_compile_commands_for(self, target: str):
+        for entry in self.compile_commands:
+            if entry["output"] == target:
+                return entry
+        return None
 
     def load_targets(self):
         ninja_log = self.build_folder / ".ninja_log"
@@ -70,7 +98,14 @@ class Project:
                 for line in f:
                     start, end, restat, target, command_hash = line.split()
                     self.targets.append(
-                        Target(self.build_folder, int(start), int(end), int(restat), target, command_hash)
+                        Target(
+                            self.build_folder,
+                            int(start),
+                            int(end), int(restat),
+                            target,
+                            self.get_compile_commands_for(target),
+                            command_hash
+                        )
                     )
         else:
             raise RuntimeError(f"Invalid file path {ninja_log}")
@@ -95,6 +130,29 @@ class Project:
                 free_threads = sorted(free_threads)
                 target.tid = free_threads.pop(0)
             busy_threads[target.tid] = target.end
+
+    def analyze_includes(self):
+        excludes = []
+        sentinels = []
+        if self.exclude_deps:
+            excludes.append(str(self.build_folder / "_deps"))
+        dependency_analysis = DependencyAnalysis(excludes, sentinels)
+        for target in self.targets:
+            if target.compile_commands_entry is None:
+                continue
+            cpp_file = Path(target.compile_commands_entry["directory"]) / target.compile_commands_entry["file"]
+            dependency_analysis.process_file(str(cpp_file), target.include_path)
+
+        dependency_analysis.build_matrix()
+        self.dependency_analysis = dependency_analysis
+
+    def get_target_times(self):
+        times = {}
+        for target in self.targets:
+            if target.compile_commands_entry is not None:
+                cpp_file = Path(target.compile_commands_entry["directory"]) / target.compile_commands_entry["file"]
+                times[str(cpp_file)] = target.duration
+        return times
 
     def get_ninja_trace_events(self):
         return [target.get_event() for target in self.targets]
@@ -123,13 +181,13 @@ class Project:
         return events
 
     def get_slow_targets(self, n=20):
-        targets = sorted(self.targets, key=lambda target: target.end - target.start, reverse=True)
+        targets = sorted(self.targets, key=lambda target: target.duration, reverse=True)
         entries = targets[:n]
         if len(targets) > n:
             entries.append(
                 PhonyTarget(
                     start=0,
-                    end=sum(map(lambda target: target.end - target.start, targets[n:])),
+                    end=sum(map(lambda target: target.duration, targets[n:])),
                     target="Other"
                 )
             )
