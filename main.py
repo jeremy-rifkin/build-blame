@@ -8,9 +8,9 @@ import json
 import math
 from pathlib import Path
 import logging
+from prettytable import PrettyTable
 
-from src.dependency_analysis import analyze_project
-from src.ninja_trace import analyze_ninja
+from src.project import Project
 
 def file_path(string):
     if os.path.isfile(string):
@@ -60,8 +60,28 @@ def main():
     else:
         output_dir.mkdir(parents=True)
 
-    analyze_ninja(build_folder, output_dir)
-    analyze_project(build_folder, output_dir, args.exclude_deps)
+    project = Project(project_folder, build_folder)
 
+    with open(output_dir / "ninja_trace.json", "w") as f:
+        f.write(json.dumps({
+            "traceEvents": project.get_ninja_trace_events(),
+            "displayTimeUnit": "ms",
+        }))
+
+    with open(output_dir / "full_trace.json", "w") as f:
+        f.write(json.dumps({
+            "traceEvents": project.get_full_trace_events(),
+            "displayTimeUnit": "ms",
+        }))
+
+    slow = project.get_slow_targets()
+    print("Slowest build targets:")
+    table = PrettyTable(border=False)
+    table.field_names = ["Time", "Target"]
+    table.align["Time"] = "r"
+    table.align["Target"] = "l"
+    for target in slow:
+        table.add_row([f"{target.end - target.start:,} ms", target.target])
+    print(table)
 
 main()

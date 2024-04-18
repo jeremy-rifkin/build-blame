@@ -416,33 +416,33 @@ def dir_path(string):
     else:
         raise RuntimeError(f"Invalid directory {string}")
 
-def analyze_project(build_folder: Path, output_dir: Path, exclude_deps: bool):
-    compile_commands = build_folder / "compile_commands.json"
-    with open(compile_commands, "r") as f:
-        compile_commands = json.load(f)
+# def analyze_project(build_folder: Path, output_dir: Path, exclude_deps: bool):
+#     compile_commands = build_folder / "compile_commands.json"
+#     with open(compile_commands, "r") as f:
+#         compile_commands = json.load(f)
 
-    excludes = []
-    sentinels = []
+#     excludes = []
+#     sentinels = []
 
-    if exclude_deps:
-        excludes.append(str(build_folder / "_deps"))
+#     if exclude_deps:
+#         excludes.append(str(build_folder / "_deps"))
 
-    analysis = Analysis(excludes, sentinels)
+#     analysis = Analysis(excludes, sentinels)
 
-    wd = os.getcwd()
+#     wd = os.getcwd()
 
-    for entry in compile_commands:
-        os.chdir(entry["directory"])
-        logging.debug(f"From compile commands: {entry['file']}")
-        # entry["command"] ...
-        analysis.process_file(os.path.abspath(entry["file"]), parse_search_paths(entry["command"]))
+#     for entry in compile_commands:
+#         os.chdir(entry["directory"])
+#         logging.debug(f"From compile commands: {entry['file']}")
+#         # entry["command"] ...
+#         analysis.process_file(os.path.abspath(entry["file"]), parse_search_paths(entry["command"]))
 
-    os.chdir(wd)
+#     os.chdir(wd)
 
-    analysis.build_matrix()
+#     analysis.build_matrix()
 
-    labels = [k for k in analysis.nodes.keys()]
-    with open(output_dir / "includes.gz", "w") as f:
-        f.write(generate_graphviz(analysis, labels))
+#     labels = [k for k in analysis.nodes.keys()]
+#     with open(output_dir / "includes.gv", "w") as f:
+#         f.write(generate_graphviz(analysis, labels))
 
-    subprocess.run(["dot", "-Tsvg", "-o", output_dir / "includes.svg", output_dir / "includes.gz"])
+#     subprocess.run(["dot", "-Tsvg", "-o", output_dir / "includes.svg", output_dir / "includes.gv"])
