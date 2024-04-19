@@ -126,6 +126,12 @@ def main():
     def is_instantiation(event):
         return event["name"].startswith("Instantiate")
 
+    def is_parse(event):
+        return event["name"].startswith("Parse")
+
+    def is_codegen(event):
+        return event["name"].startswith("CodeGen ")
+
     def is_project_include(event):
         return event["name"] == "Source" # and event["args"]["detail"].startswith(os.path.abspath(project_folder))
 
@@ -148,11 +154,23 @@ def main():
     print("\nInstantiations excluding children:")
     print_slow(project.get_expensive_trace_events_excluding(is_instantiation))
 
-    print("\nTemplates resulting in the most instantiations:")
+    print("\nTemplates with the most total instantiation time:")
     print_slow(project.get_expensive_trace_events(is_instantiation, pre_transform=strip_template_parameters_in_event))
 
-    print("\nTemplates resulting in the most instantiations excluding children:")
+    print("\nTemplates with the most total instantiation time excluding children:")
     print_slow(project.get_expensive_trace_events_excluding(is_instantiation, pre_transform=strip_template_parameters_in_event))
+
+    print("\nSlow parses:")
+    print_slow(project.get_expensive_trace_events(is_parse))
+
+    print("\nSlow parses excluding children:")
+    print_slow(project.get_expensive_trace_events_excluding(is_parse))
+
+    print("\nSlow codegen:")
+    print_slow(project.get_expensive_trace_events(is_codegen))
+
+    print("\nSlow codegen excluding children:")
+    print_slow(project.get_expensive_trace_events_excluding(is_codegen))
 
     # print("\nIncludes in project:")
     # print_slow(project.get_expensive_trace_events(is_project_include, 30))
