@@ -65,7 +65,13 @@ class Target:
 @dataclass
 class TimingEntry:
     duration: int
+    count: int
     name: str
+
+@dataclass
+class DurationAndCount:
+    duration: int
+    count: int
 
 class Project:
     def __init__(self, project_folder: Path, build_folder: Path, excludes: list, sentinels: list):
@@ -194,6 +200,7 @@ class Project:
             slow_entries.append(
                 TimingEntry(
                     duration=sum(map(lambda entry: entry.duration, entries[n:])),
+                    count=len(entries) - n,
                     name="Other"
                 )
             )
@@ -201,24 +208,26 @@ class Project:
 
     def get_slow_targets(self, target_filter = lambda _: True, n=20):
         targets = filter(target_filter, self.targets)
-        return self.get_slow(list(map(lambda target: TimingEntry(target.duration, target.get_name()), targets)), n)
+        return self.get_slow(list(map(lambda target: TimingEntry(target.duration, 1, target.get_name()), targets)), n)
 
     def get_frontend_backend_totals(self):
-        frontend = 0
-        backend = 0
+        frontend = TimingEntry(0, 0, "Frontend")
+        backend = TimingEntry(0, 0, "Backend")
         for target in self.targets:
             last_frontend_end = 0
             last_backend_end = 0
             for event in target.get_clang_trace_events():
                 if event["name"] == "Frontend":
                     assert event["ts"] >= last_frontend_end
-                    frontend += event["dur"]
+                    frontend.duration += event["dur"] // 1000
+                    frontend.count += 1
                     last_frontend_end = event["ts"] + event["dur"]
                 elif event["name"] == "Backend":
                     assert event["ts"] >= last_backend_end
-                    backend += event["dur"]
+                    backend.duration += event["dur"] // 1000
+                    backend.count += 1
                     last_backend_end = event["ts"] + event["dur"]
-        return [TimingEntry(frontend // 1000, "Frontend"), TimingEntry(backend // 1000, "Backend")]
+        return [frontend, backend]
 
     def get_expensive_trace_events(self, filter, n=20, pre_transform=None):
         # Map from name + entry.args.detail to total duration
@@ -229,9 +238,10 @@ class Project:
                     event = pre_transform(event) if pre_transform is not None else event
                     key = event['args']['detail'] # f"{event['name']}: {event['args']['detail']}"
                     if key not in entries:
-                        entries[key] = 0
-                    entries[key] += event["dur"]
-        return self.get_slow([TimingEntry(time, key) for key, time in entries.items()], n)
+                        entries[key] = DurationAndCount(0, 0)
+                    entries[key].duration += event["dur"]
+                    entries[key].count += 1
+        return self.get_slow([TimingEntry(value.duration, value.count, key) for key, value in entries.items()], n)
 
     def get_expensive_trace_events_excluding(self, filter, n=20, pre_transform=None):
         # Map from name + entry.args.detail to total duration
@@ -266,12 +276,7 @@ class Project:
             for event in events_map.values():
                 key = event['args']['detail'] # f"{event['name']}: {event['args']['detail']}"
                 if key not in entries:
-                    entries[key] = 0
-                entries[key] += event["dur"]
-        return self.get_slow([TimingEntry(time, key) for key, time in entries.items()], n)
-
-
-    """
-    def get_expensive_includes(self, n=20):
-
-    """
+                    entries[key] = DurationAndCount(0, 0)
+                entries[key].duration += event["dur"]
+                entries[key].count += 1
+        return self.get_slow([TimingEntry(value.duration, value.count, key) for key, value in entries.items()], n)

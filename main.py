@@ -49,11 +49,12 @@ def strip_template_parameters_in_event(event):
 
 def print_slow(slow_entries: list[TimingEntry]):
     table = PrettyTable(border=False)
-    table.field_names = ["Time", "Target"]
+    table.field_names = ["Time", "Count", "Target"]
     table.align["Time"] = "r"
+    table.align["Count"] = "l"
     table.align["Target"] = "l"
     for target in slow_entries:
-        table.add_row([time_to_human(target.duration), target.name])
+        table.add_row([time_to_human(target.duration), target.count, target.name])
     print(table)
 
 def main():
