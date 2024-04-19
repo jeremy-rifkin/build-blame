@@ -164,14 +164,8 @@ def main():
     print("\nSlow parses:")
     print_slow(project.get_expensive_trace_events(is_parse))
 
-    print("\nSlow parses excluding children:")
-    print_slow(project.get_expensive_trace_events_excluding(is_parse))
-
     print("\nSlow codegen:")
     print_slow(project.get_expensive_trace_events(is_codegen))
-
-    print("\nSlow codegen excluding children:")
-    print_slow(project.get_expensive_trace_events_excluding(is_codegen))
 
     # print("\nIncludes in project:")
     # print_slow(project.get_expensive_trace_events(is_project_include, 30))

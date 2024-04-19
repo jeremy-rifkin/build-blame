@@ -251,55 +251,7 @@ Slow parses:
   2m 56.48s  252    std::hash
  169m 2.44s  706    Other
 
-Slow parses excluding children:
-       Time  Count  Target
- 17m 53.57s  222    std::vector
- 17m 32.79s  133    std::basic_string
- 14m 50.01s  28     libassert::assertion_info
- 13m 54.29s  272    std::tuple
- 10m 32.36s  72     std::chrono::system_clock
-  9m 27.50s  811    std::numeric_limits
-  8m 14.27s  507    std::char_traits
-  5m 31.05s  49     std::_Rb_tree
-  5m 24.86s  1      test_class
-   5m 1.22s  133    std::basic_string_view
-  4m 33.86s  136    std::pair
-  4m 11.61s  88     std::__atomic_base
-   4m 3.01s  107    std::ios_base
-  3m 54.74s  252    std::_Tuple_impl
-  3m 44.39s  37     std::__detail::_Power2_rehash_policy
-  3m 44.24s  11     std::__detail::_ScannerBase
-  3m 41.32s  28     magic_enum::customize::customize_t
-   3m 9.29s  166    std::allocator_traits
-   3m 6.03s  1      foo
-  2m 56.48s  252    std::hash
- 167m 3.13s  706    Other
-
 Slow codegen:
-       Time  Count  Target
-  2m 34.15s  49     std::basic_string<char>::basic_string<std::allocator<char>>
-    59.879s  11     main
-    39.239s  1      test_class<int>::something_else
-    34.047s  13     cpptrace::raw_trace::~raw_trace
-    27.437s  13     std::vector<std::basic_string<char>>::vector
-    25.466s  9      std::basic_string<char>::basic_string<std::basic_string_view<char>, void>
-    20.984s  4      std::vector<std::pair<long, std::vector<std::sub_match<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>>>>>::vector
-    19.864s  7      std::_Rb_tree<std::basic_string<char>, std::pair<const std::basic_string<char>, std::basic_string<char>>, std::_Select1st<std::pair<const std::basic_string<char>, std::basic_string<char>>>, std::less<std::basic_string<char>>>::_Rb_tree
-    19.582s  13     std::vector<unsigned long>::vector
-    19.304s  1      __gnu_cxx::__alloc_traits<std::allocator<std::pair<char, char>>>::_S_select_on_copy
-    17.714s  1      foo::baz
-    16.906s  7      microfmt::detail::format<4UL>
-    13.084s  6      std::map<std::basic_string<char>, std::basic_string<char>>::map
-    11.882s  2      _dwarf_read_line_table_header
-    11.125s  2      std::_Hashtable<std::basic_string<char>, std::pair<const std::basic_string<char>, std::basic_string<char>>, std::allocator<std::pair<const std::basic_string<char>, std::basic_string<char>>>, std::__detail::_Select1st, std::equal_to<std::basic_string<char>>, std::hash<std::basic_string<char>>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>>::_Hashtable
-    11.092s  1      _dwarf_exec_frame_instr
-    11.065s  2      std::vector<libassert::extra_diagnostic>::vector
-    10.748s  1      libassert::detail::analysis::analysis
-    10.629s  3      std::vector<std::pair<std::basic_string<char>, std::basic_string<char>>>::vector
-     10.47s  1      _dwarf_internal_get_pubnames_like
- 35m 52.67s  1621   Other
-
-Slow codegen excluding children:
        Time  Count  Target
   2m 34.15s  49     std::basic_string<char>::basic_string<std::allocator<char>>
     59.879s  11     main
