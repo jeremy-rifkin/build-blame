@@ -68,11 +68,13 @@ class TimingEntry:
     name: str
 
 class Project:
-    def __init__(self, project_folder: Path, build_folder: Path):
+    def __init__(self, project_folder: Path, build_folder: Path, excludes: list, sentinels: list):
         self.project_folder = project_folder
         self.build_folder = build_folder
         self.targets = []
         self.exclude_deps = True
+        self.excludes = excludes
+        self.sentinels = sentinels
 
         logging.info("Loading compile commands")
         self.load_compile_commands()
@@ -137,8 +139,8 @@ class Project:
             busy_threads[target.tid] = target.end
 
     def analyze_includes(self):
-        excludes = []
-        sentinels = []
+        excludes = self.excludes
+        sentinels = self.sentinels
         if self.exclude_deps:
             excludes.append(str(self.build_folder / "_deps"))
         dependency_analysis = DependencyAnalysis(excludes, sentinels)
@@ -185,23 +187,25 @@ class Project:
                 events.append(event)
         return events
 
-    def get_slow_targets(self, target_filter = lambda _: True, n=20):
-        targets = filter(target_filter, self.targets)
-        targets = sorted(targets, key=lambda target: target.duration, reverse=True)
-        entries = list(map(lambda target: TimingEntry(target.duration, target.get_name()), targets[:n]))
-        if len(targets) > n:
-            entries.append(
+    def get_slow(self, entries: list[TimingEntry], n=20):
+        entries = sorted(entries, key=lambda entry: entry.duration, reverse=True)
+        slow_entries = entries[:n]
+        if len(entries) > n:
+            slow_entries.append(
                 TimingEntry(
-                    duration=sum(map(lambda target: target.duration, targets[n:])),
+                    duration=sum(map(lambda entry: entry.duration, entries[n:])),
                     name="Other"
                 )
             )
-        return entries
+        return slow_entries
+
+    def get_slow_targets(self, target_filter = lambda _: True, n=20):
+        targets = filter(target_filter, self.targets)
+        return self.get_slow(list(map(lambda target: TimingEntry(target.duration, target.get_name()), targets)), n)
 
     def get_frontend_backend_totals(self):
         frontend = 0
         backend = 0
-
         for target in self.targets:
             last_frontend_end = 0
             last_backend_end = 0
@@ -214,5 +218,60 @@ class Project:
                     assert event["ts"] >= last_backend_end
                     backend += event["dur"]
                     last_backend_end = event["ts"] + event["dur"]
-
         return [TimingEntry(frontend // 1000, "Frontend"), TimingEntry(backend // 1000, "Backend")]
+
+    def get_expensive_trace_events(self, filter, n=20, pre_transform=None):
+        # Map from name + entry.args.detail to total duration
+        entries = {}
+        for target in self.targets:
+            for event in target.get_clang_trace_events():
+                if filter(event):
+                    event = pre_transform(event) if pre_transform is not None else event
+                    key = event['args']['detail'] # f"{event['name']}: {event['args']['detail']}"
+                    if key not in entries:
+                        entries[key] = 0
+                    entries[key] += event["dur"]
+        return self.get_slow([TimingEntry(time, key) for key, time in entries.items()], n)
+
+    def get_expensive_trace_events_excluding(self, filter, n=20, pre_transform=None):
+        # Map from name + entry.args.detail to total duration
+        entries = {}
+        for target in self.targets:
+            # we have to do nest-exclusion at the target level since every target's time domains will overlap
+            events = []
+            for event in target.get_clang_trace_events():
+                if filter(event):
+                    events.append(pre_transform(event) if pre_transform is not None else event)
+            # figure out nested events and exclude children
+            events = sorted(events, key=lambda item: item["ts"])
+            active_events = [] # a stack
+            events_map = {} # id -> event
+            count = 0
+            for item in events:
+                new_item = copy.deepcopy(item)
+                new_item["id"] = count
+                new_item["parent"] = None
+                now = item["ts"]
+                while len(active_events) > 0 and active_events[-1]["ts"] + active_events[-1]["dur"] <= now:
+                    active_events.pop()
+                if len(active_events) > 0:
+                    new_item["parent"] = active_events[-1]["id"]
+                active_events.append(new_item)
+                events_map[count] = new_item
+                count += 1
+            for event in events_map.values():
+                if event["parent"] is not None:
+                    events_map[event["parent"]]["dur"] -= event["dur"]
+            # aggregate into entries
+            for event in events_map.values():
+                key = event['args']['detail'] # f"{event['name']}: {event['args']['detail']}"
+                if key not in entries:
+                    entries[key] = 0
+                entries[key] += event["dur"]
+        return self.get_slow([TimingEntry(time, key) for key, time in entries.items()], n)
+
+
+    """
+    def get_expensive_includes(self, n=20):
+
+    """
