@@ -64,7 +64,7 @@ def main():
         description="Analyze C++ transitive dependencies"
     )
     parser.add_argument("--project-folder", type=dir_path, required=True)
-    parser.add_argument("--build-folder", type=dir_path, required=True)
+    parser.add_argument("--build-folder", type=dir_path)
     parser.add_argument("--output", required=True)
     parser.add_argument("--exclude-deps", type=bool, default=True)
     parser.add_argument('--exclude', action='append', nargs=1)
@@ -121,7 +121,10 @@ def main():
         f.write(project.dependency_analysis.generate_graphviz(project.get_target_times()))
 
     logger.info("Rendering includes graph")
-    subprocess.run(["dot", "-Tsvg", "-o", output_dir / "includes.svg", output_dir / "includes.gv"])
+    try:
+        subprocess.run(["dot", "-Tsvg", "-o", output_dir / "includes.svg", output_dir / "includes.gv"])
+    except FileNotFoundError:
+        logger.warn("dot not found, didn't render graphviz code")
 
     def is_tu(target: Target):
         return target.target.endswith(".o")

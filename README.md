@@ -15,9 +15,23 @@ Preview:
 
 ## How to use:
 
+Prerequisites:
+
+- graphviz (`dot`)
+- cmake
+- ninja
+- clang
+
 In your project
 ```
-cmake -B build -S . -DCMAKE_CXX_COMPILER=clang++-17 -DCMAKE_C_COMPILER=clang-17 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=On -GNinja -DCMAKE_CXX_FLAGS=-ftime-trace -DCMAKE_C_FLAGS=-ftime-trace
+cmake -B build -S . \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
+    -GNinja \
+    -DCMAKE_CXX_FLAGS=-ftime-trace \
+    -DCMAKE_C_FLAGS=-ftime-trace
 ```
 
 Then
