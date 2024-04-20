@@ -114,11 +114,12 @@ def phase_three(string):
                 line += m.group(groupname).count("\n")
             i = m.end()
         else:
+            logging.debug("--------------------------- lexer error ---------------------------")
             logging.debug(string)
-            logging.debug(i)
-            logging.debug(tokens)
-            logging.debug(line)
-            logging.debug("\n\n{}\n\n".format(string[i-5:i+20]))
+            logging.debug(f"index: {i}")
+            logging.debug(f"tokens: {tokens}")
+            logging.debug(f"line: {line}")
+            logging.debug("surrounding code snippet:\n\n{}\n\n".format(string[i-5:i+20]))
             raise Exception("lexer error")
     # TODO ensure there's always a newline token at the end?
     return tokens
