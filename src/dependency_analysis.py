@@ -89,7 +89,7 @@ def init_lexer():
         for name, pattern in lexer_rules:
             lexer_regex += ("" if lexer_regex == "" else "|") + "(?P<{}>{})".format(name, pattern)
         logger.debug(f"lexer regex: {lexer_regex}")
-        lexer_regex = re.compile(lexer_regex)
+        lexer_regex = re.compile(lexer_regex, re.UNICODE)
 
 def phase_three(string):
     # tokenization
