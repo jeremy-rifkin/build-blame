@@ -70,12 +70,16 @@ def main():
     parser.add_argument('--exclude', action='append', nargs=1)
     parser.add_argument('--sentinel', action='append', nargs=1)
     parser.add_argument('-n', type=int, default=20)
+    parser.add_argument("--debug", type=bool, default=False)
     args = parser.parse_args()
 
     project_folder = Path(args.project_folder)
     build_folder = Path(args.build_folder) if args.build_folder is not None else project_folder / "build"
     output_dir = Path(args.output)
     n = args.n
+
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
 
     if os.path.exists(output_dir):
         assert os.path.isdir(output_dir)
