@@ -63,7 +63,7 @@ lexer_rules = [
     ("PREPROCESSING_DIRECTIVE", r"(?:#|%:)[a-z]+"),
     ("PUNCTUATION", r"[,.<>?/=;:~!#%^&*\-\+|\(\)\{\}\[\]]"),
     ("NEWLINE", r"\n"),
-    ("WHITESPACE", r"[^\S\n]+") #r"\s+"
+    ("WHITESPACE", r"[ \r\t\f\u200B-\u200D\uFEFF]+") #r"\s+"
 ]
 lexer_ignores = {"COMMENT", "MCOMMENT", "WHITESPACE"}
 lexer_regex = ""
