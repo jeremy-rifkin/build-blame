@@ -3,10 +3,10 @@ from pathlib import Path
 import os
 import json
 from dataclasses import dataclass
-import logging
 import re
 
 from .dependency_analysis import DependencyAnalysis, parse_search_paths
+from .common import logger
 
 class Target:
     def __init__(self, build_folder: Path, start: int, end: int, restat: int, target: str, compile_commands_entry, command_hash: str):
@@ -87,13 +87,13 @@ class Project:
         self.excludes = excludes
         self.sentinels = sentinels
 
-        logging.info("Loading compile commands")
+        logger.info("Loading compile commands")
         self.load_compile_commands()
-        logging.info("Loading targets")
+        logger.info("Loading targets")
         self.load_targets()
-        logging.info("Making thread assignments")
+        logger.info("Making thread assignments")
         self.try_to_make_thread_assignments()
-        logging.info("Analyzing includes")
+        logger.info("Analyzing includes")
         self.analyze_includes()
 
     def load_compile_commands(self):

@@ -1,7 +1,8 @@
 import os
 import re
 import math
-import logging
+
+from .common import logger
 
 #
 # Originally from https://github.com/jeremy-rifkin/cpp-dependency-analyzer
@@ -84,11 +85,11 @@ class Token:
             return "{} {} {}".format(self.line, self.token_type, self.value)
 def init_lexer():
     global lexer_regex
-    for name, pattern in lexer_rules:
-        lexer_regex += ("" if lexer_regex == "" else "|") + "(?P<{}>{})".format(name, pattern)
-    # print(lexer_regex)
-    lexer_regex = re.compile(lexer_regex)
-init_lexer()
+    if lexer_regex == "":
+        for name, pattern in lexer_rules:
+            lexer_regex += ("" if lexer_regex == "" else "|") + "(?P<{}>{})".format(name, pattern)
+        logger.debug(f"lexer regex: {lexer_regex}")
+        lexer_regex = re.compile(lexer_regex)
 
 def phase_three(string):
     # tokenization
@@ -114,12 +115,12 @@ def phase_three(string):
                 line += m.group(groupname).count("\n")
             i = m.end()
         else:
-            logging.debug("--------------------------- lexer error ---------------------------")
-            logging.debug(string)
-            logging.debug(f"index: {i}")
-            logging.debug(f"tokens: {tokens}")
-            logging.debug(f"line: {line}")
-            logging.debug("surrounding code snippet:\n\n{}\n\n".format(string[i-5:i+20]))
+            logger.debug("--------------------------- lexer error ---------------------------")
+            logger.debug(string)
+            logger.debug(f"index: {i}")
+            logger.debug(f"tokens: {tokens}")
+            logger.debug(f"line: {line}")
+            logger.debug("surrounding code snippet:\n\n{}\n\n".format(string[i-5:i+20]))
             raise Exception("lexer error")
     # TODO ensure there's always a newline token at the end?
     return tokens
@@ -183,7 +184,7 @@ def parse_includes(path: str) -> list:
                 path_token = tokens.pop(0)
                 expect(tokens, ("NEWLINE", ), line, "#include declaration")
                 tokens.pop(0) # pop eol
-                logging.debug("{} #include \"{}\"".format(line, path_token.value))
+                logger.debug("{} #include \"{}\"".format(line, path_token.value))
                 #process_queue.append(path_token.value)
                 includes.append(path_token.value)
                 # self.queue_all(process_queue, os.path.join(os.path.dirname(file_path), path_token.value))
@@ -220,12 +221,12 @@ def parse_includes(path: str) -> list:
                 expect(tokens, ("NEWLINE", ), line, "#include declaration")
                 tokens.pop(0) # pop eol
                 ## # library includes won't be traversed
-                logging.debug("{} #include <{}>".format(line, path))
+                logger.debug("{} #include <{}>".format(line, path))
                 includes.append(path)
             elif peek_tokens(tokens, ("IDENTIFIER", )):
                 identifier = tokens.pop(0)
                 expect(tokens, ("NEWLINE", ), line, "#include declaration")
-                logging.debug("Warning: Ignoring #include {}".format(identifier.value))
+                logger.debug("Warning: Ignoring #include {}".format(identifier.value))
             else:
                 raise Exception("parse error: unexpected token sequence after #include directive on line {}. This may be a valid preprocessing directive and reflect a shortcoming of this parser.".format(line))
         else:
@@ -236,6 +237,7 @@ def parse_includes(path: str) -> list:
 
 class DependencyAnalysis:
     def __init__(self, excludes: list, sentinels: list):
+        init_lexer()
         self.excludes = excludes
         self.sentinels = sentinels
         self.not_found = set()
@@ -251,7 +253,7 @@ class DependencyAnalysis:
             file_path
         )
         if os.path.exists(relative):
-            logging.debug(f"        Found: {relative}")
+            logger.debug(f"        Found: {relative}")
             return os.path.abspath(relative)
         else:
             for search_path in search_paths:
@@ -260,13 +262,13 @@ class DependencyAnalysis:
                     file_path
                 )
                 if os.path.exists(path):
-                    logging.debug(f"        Found: {path}")
+                    logger.debug(f"        Found: {path}")
                     return os.path.abspath(path)
 
     def process_include(self, base: str, file_path: str, search_paths: list):
         resolved = self.resolve_include(base, file_path, search_paths)
         if resolved:
-            logging.debug("Recursing into {}".format(file_path))
+            logger.debug("Recursing into {}".format(file_path))
             self.process_file(resolved, search_paths)
             return resolved
         else:
@@ -282,7 +284,7 @@ class DependencyAnalysis:
         self.visited.add(path)
         includes = parse_includes(path)
         # print(path)
-        logging.debug(f"    Adding includes: {includes}")
+        logger.debug(f"    Adding includes: {includes}")
         dependencies = set()
         for include in includes:
             resolved = self.process_include(path, include, search_paths)

@@ -8,6 +8,7 @@ import subprocess
 import copy
 
 from src.project import Project, Target, TimingEntry
+from src.common import logger
 
 def file_path(string):
     if os.path.isfile(string):
@@ -58,7 +59,6 @@ def print_slow(slow_entries: list[TimingEntry]):
     print(table)
 
 def main():
-    logging.basicConfig(level=logging.INFO)
     parser = argparse.ArgumentParser(
         prog="cpp-dependency-analyzer",
         description="Analyze C++ transitive dependencies"
@@ -70,7 +70,7 @@ def main():
     parser.add_argument('--exclude', action='append', nargs=1)
     parser.add_argument('--sentinel', action='append', nargs=1)
     parser.add_argument('-n', type=int, default=20)
-    parser.add_argument("--debug", type=bool, default=False)
+    parser.add_argument("--debug", action='store_true')
     args = parser.parse_args()
 
     project_folder = Path(args.project_folder)
@@ -79,7 +79,9 @@ def main():
     n = args.n
 
     if args.debug:
-        logging.basicConfig(level=logging.DEBUG)
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
 
     if os.path.exists(output_dir):
         assert os.path.isdir(output_dir)
@@ -100,25 +102,25 @@ def main():
 
     project = Project(project_folder, build_folder, excludes, sentinels)
 
-    logging.info("Writing ninja_trace.json")
+    logger.info("Writing ninja_trace.json")
     with open(output_dir / "ninja_trace.json", "w") as f:
         f.write(json.dumps({
             "traceEvents": project.get_ninja_trace_events(),
             "displayTimeUnit": "ms",
         }))
 
-    logging.info("Writing full_trace.json")
+    logger.info("Writing full_trace.json")
     with open(output_dir / "full_trace.json", "w") as f:
         f.write(json.dumps({
             "traceEvents": project.get_full_trace_events(),
             "displayTimeUnit": "ms",
         }))
 
-    logging.info("Generating includes graph")
+    logger.info("Generating includes graph")
     with open(output_dir / "includes.gv", "w") as f:
         f.write(project.dependency_analysis.generate_graphviz(project.get_target_times()))
 
-    logging.info("Rendering includes graph")
+    logger.info("Rendering includes graph")
     subprocess.run(["dot", "-Tsvg", "-o", output_dir / "includes.svg", output_dir / "includes.gv"])
 
     def is_tu(target: Target):
