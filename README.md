@@ -31,247 +31,230 @@ Example output, on top of traces and graphs above:
 
 ```
 Slowest translation unit targets:
-      Time  Count  Target
-    3.797s  1      /home/rifkin/projects/libassert/build-clang/_deps/googletest-src/googletest/src/gtest-all.cc
-     3.57s  1      /home/rifkin/projects/libassert/src/analysis.cpp
-    3.316s  1      /home/rifkin/projects/libassert/tests/integration/integration.cpp
-    2.795s  1      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/symbols/symbols_with_libdwarf.cpp
-    2.713s  1      /home/rifkin/projects/libassert/tests/demo/demo.cpp
-    2.661s  1      /home/rifkin/projects/libassert/build-clang/_deps/googletest-src/googlemock/src/gmock-all.cc
-    2.604s  1      /home/rifkin/projects/libassert/tests/unit/lexer.cpp
-    2.407s  1      /home/rifkin/projects/libassert/tests/unit/literals.cpp
-    2.349s  1      /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/compress/zstd_lazy.c
-    2.331s  1      /home/rifkin/projects/libassert/tests/unit/fmt-test.cpp
-    2.246s  1      /home/rifkin/projects/libassert/tests/unit/stringify.cpp
-    2.006s  1      /home/rifkin/projects/libassert/src/assert.cpp
-    1.819s  1      /home/rifkin/projects/libassert/tests/binaries/catch2-demo.cpp
-    1.802s  1      /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/catch_session.cpp
-     1.77s  1      /home/rifkin/projects/libassert/tests/binaries/gtest-demo.cpp
-    1.711s  1      /home/rifkin/projects/libassert/build-clang/_deps/googletest-src/googlemock/src/gmock_main.cc
-    1.705s  1      /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/internal/catch_commandline.cpp
-    1.646s  1      /home/rifkin/projects/libassert/src/paths.cpp
-     1.64s  1      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/cpptrace.cpp
-    1.608s  1      /home/rifkin/projects/libassert/src/utils.cpp
- 1m 54.85s  229    Other
+    Time  Count  Target
+  2.464s  1      /home/rifkin/projects/libassert/src/analysis.cpp
+   2.01s  1      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/symbols/symbols_with_libdwarf.cpp
+  1.682s  1      /home/rifkin/projects/libassert/src/assert.cpp
+   1.66s  1      /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/compress/zstd_lazy.c
+   1.45s  1      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/cpptrace.cpp
+   1.39s  1      /home/rifkin/projects/libassert/src/paths.cpp
+  1.359s  1      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/symbols/symbols_core.cpp
+  1.282s  1      /home/rifkin/projects/libassert/src/utils.cpp
+  1.192s  1      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/ctrace.cpp
+  1.184s  1      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/snippets/snippet.cpp
+  1.183s  1      /home/rifkin/projects/libassert/src/tokenizer.cpp
+   978ms  1      /home/rifkin/projects/libassert/src/printing.cpp
+   953ms  1      /home/rifkin/projects/libassert/src/stringification.cpp
+   826ms  1      /home/rifkin/projects/libassert/src/platform.cpp
+   824ms  1      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/unwind/unwind_with_unwind.cpp
+   681ms  1      /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/compress/zstd_compress.c
+   604ms  1      /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/decompress/zstd_decompress_block.c
+   597ms  1      /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/dictBuilder/zdict.c
+   550ms  1      /home/rifkin/projects/libassert/src/formatting_and_type_tools.cpp
+   535ms  1      /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/dictBuilder/fastcover.c
+ 20.736s  96     Other
 
 Slowest link targets:
-    Time  Count  Target
- 10.712s  1      fmt-test
- 10.528s  1      lexer
- 10.449s  1      catch2-demo
- 10.384s  1      gtest-demo
- 10.189s  1      integration
- 10.003s  1      stringify
-  9.991s  1      demo
-  9.204s  1      type_handling
-  9.198s  1      test_public_utilities
-  9.147s  1      basic_test
-  9.064s  1      disambiguation
-  8.994s  1      test_type_prettier
-  8.985s  1      tokens_and_highlighting
-  2.299s  1      literals
-  1.665s  1      _deps/catch2-build/src/libCatch2d.a
-   808ms  1      _deps/zstd-build/lib/libzstd.a
-   609ms  1      _deps/cpptrace-build/libcpptrace.a
-   443ms  1      _deps/libdwarf-build/src/lib/libdwarf/libdwarf.a
-   371ms  1      libassert.a
-   297ms  1      lib/libgtest.a
-   612ms  6      Other
+  Time  Count  Target
+ 196ms  1      libassert.a
+ 162ms  1      _deps/cpptrace-build/libcpptrace.a
+ 159ms  1      _deps/zstd-build/lib/libzstd.a
+ 118ms  1      _deps/libdwarf-build/src/lib/libdwarf/libdwarf.a
 
 Frontend/Backend:
-      Time  Count  Target
- 1m 54.87s  406    Frontend
-   17.861s  248    Backend
+   Time  Count  Target
+ 24.02s  176    Frontend
+  6.52s  115    Backend
 
 Includes:
-         Time  Count  Target
-   350m 5.29s  133    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/string
-  257m 34.60s  28     /home/rifkin/projects/libassert/include/libassert/assert.hpp
-  238m 22.07s  104    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/ios
-  214m 46.24s  104    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/ostream
-  168m 20.68s  107    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/ios_base.h
-  164m 45.54s  133    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/basic_string.h
-  158m 43.60s  72     /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/../catch2/internal/catch_stringref.hpp
-   118m 2.46s  107    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/locale_classes.h
-  106m 26.69s  49     /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/../catch2/internal/catch_reusable_string_stream.hpp
-  103m 36.87s  19     /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/../catch2/interfaces/catch_interfaces_reporter.hpp
-  102m 31.32s  7      /home/rifkin/projects/libassert/build-clang/_deps/googletest-src/googletest/include/gtest/gtest.h
-    90m 6.77s  44     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/memory
-   82m 30.24s  23     /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/../catch2/catch_tostring.hpp
-    79m 0.74s  12     /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/../catch2/internal/catch_assertion_handler.hpp
-   78m 33.74s  13     /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/../catch2/reporters/catch_reporter_common_base.hpp
-   72m 54.26s  108    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/vector
-   66m 39.92s  10     /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/../catch2/matchers/internal/catch_matchers_impl.hpp
-   64m 41.41s  34     /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/include/cpptrace/cpptrace.hpp
-   62m 55.62s  105    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/locale_facets.h
-    61m 4.86s  10     /home/rifkin/projects/libassert/build-clang/_deps/catch2-src/src/catch2/../catch2/matchers/catch_matchers.hpp
- 4356m 26.35s  636    Other
+    Time  Count  Target
+   2.09s  9      /home/rifkin/projects/libassert/include/libassert/assert.hpp
+    1.9s  8      /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/regex
+  1.867s  15     /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/include/cpptrace/cpptrace.hpp
+  1.853s  16     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/string
+  1.631s  4      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/symbols/symbols.hpp
+  1.607s  15     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/ios
+   1.47s  8      /home/rifkin/projects/libassert/src/utils.hpp
+  1.324s  15     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/ios_base.h
+  1.208s  15     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/ostream
+  1.173s  9      /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/compress/zstd_compress_internal.h
+  1.123s  26     /usr/lib/llvm-17/lib/clang/17/include/emmintrin.h
+  1.123s  10     /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/compress/../common/zstd_internal.h
+  1.096s  78     /usr/include/stdlib.h
+  1.065s  4      /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/src/symbols/../binary/object.hpp
+   972ms  15     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/locale_classes.h
+   962ms  16     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/basic_string.h
+   875ms  25     /usr/lib/llvm-17/lib/clang/17/include/xmmintrin.h
+   799ms  15     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/sstream
+   787ms  13     /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/compress/../common/compiler.h
+   770ms  15     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/istream
+ 34.051s  363    Other
 
 Includes excluding children:
-        Time  Count  Target
-  72m 15.39s  133    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/basic_string.h
-  36m 18.53s  28     /home/rifkin/projects/libassert/include/libassert/assert.hpp
-  34m 15.73s  105    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/locale_facets.tcc
-  33m 20.19s  143    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/type_traits
-  32m 21.96s  72     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/chrono.h
-  31m 34.56s  228    /usr/include/features.h
-  31m 32.07s  136    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/tuple
-  22m 57.07s  111    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_bvector.h
-  20m 57.42s  136    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_function.h
-  20m 20.92s  138    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_algobase.h
-  19m 26.89s  198    /usr/include/stdlib.h
-   19m 9.41s  133    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/string_view
-  18m 36.78s  100    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/limits
-  16m 37.90s  105    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/locale_facets.h
-  15m 57.00s  107    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/ios_base.h
-  15m 55.51s  28     /home/rifkin/projects/libassert/build-clang/_deps/magic_enum-src/include/magic_enum/magic_enum.hpp
-  13m 58.93s  107    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/system_error
-  13m 25.59s  49     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_tree.h
-  13m 20.27s  37     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/unordered_map.h
-  13m 15.04s  133    /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/ext/string_conversions.h
- 964m 13.43s  636    Other
+   Time  Count  Target
+  694ms  96     /usr/include/features.h
+  497ms  9      /home/rifkin/projects/libassert/include/libassert/assert.hpp
+  428ms  16     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/basic_string.h
+  402ms  78     /usr/include/stdlib.h
+  338ms  81     /usr/include/string.h
+  316ms  25     /usr/lib/llvm-17/lib/clang/17/include/xmmintrin.h
+  290ms  15     /home/rifkin/projects/libassert/build-clang/_deps/cpptrace-src/include/cpptrace/cpptrace.hpp
+  286ms  15     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/locale_facets.tcc
+  280ms  78     /usr/include/x86_64-linux-gnu/sys/types.h
+  242ms  26     /usr/lib/llvm-17/lib/clang/17/include/emmintrin.h
+  228ms  9      /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/chrono.h
+  225ms  54     /home/rifkin/projects/libassert/build-clang/_deps/libdwarf-src/src/lib/libdwarf/libdwarf.h
+  224ms  53     /usr/include/stdio.h
+  176ms  15     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/shared_ptr_base.h
+  175ms  8      /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/regex_scanner.h
+  174ms  16     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/tuple
+  167ms  16     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/type_traits
+  167ms  10     /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/compress/../common/zstd_internal.h
+  161ms  8      /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/unordered_map.h
+  157ms  9      /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/hashtable_policy.h
+ 8.626s  363    Other
 
 Instantiations:
-         Time  Count  Target
-   13m 40.01s  3      std::basic_regex<char>::_M_compile
-    13m 2.33s  3      std::__detail::_Compiler<std::regex_traits<char>>::_Compiler
-   11m 45.17s  7      std::vformat_to<std::__format::_Sink_iter<char>>
-   11m 44.17s  7      std::__format::__do_vformat_to<std::__format::_Sink_iter<char>, char, std::basic_format_context<std::__format::_Sink_iter<char>, char>>
-   11m 27.17s  1      test_class<int>::something<N>
-   11m 27.15s  1      test_class<int>::something_else
-   11m 13.34s  3      std::__detail::_Compiler<std::regex_traits<char>>::_M_disjunction
-    11m 9.24s  3      std::__detail::_Compiler<std::regex_traits<char>>::_M_alternative
-   10m 59.62s  3      std::__detail::_Compiler<std::regex_traits<char>>::_M_term
-    10m 8.47s  7      std::vformat_to<std::__format::_Sink_iter<wchar_t>>
-    10m 7.18s  7      std::__format::__do_vformat_to<std::__format::_Sink_iter<wchar_t>, wchar_t, std::basic_format_context<std::__format::_Sink_iter<wchar_t>, wchar_t>>
-    9m 31.99s  7      std::__format::_Formatting_scanner<std::__format::_Sink_iter<char>, char>::_Formatting_scanner
-    9m 18.59s  3      std::__detail::_Compiler<std::regex_traits<char>>::_M_atom
-    8m 33.17s  7      std::__format::_Formatting_scanner<std::__format::_Sink_iter<char>, char>::_M_format_arg
-    8m 11.38s  7      std::__format::_Formatting_scanner<std::__format::_Sink_iter<wchar_t>, wchar_t>::_Formatting_scanner
-    7m 55.85s  2      std::basic_regex<char>::basic_regex<std::char_traits<char>, std::allocator<char>>
-     7m 1.40s  7      std::__format::_Formatting_scanner<std::__format::_Sink_iter<wchar_t>, wchar_t>::_M_format_arg
-     6m 6.39s  133    __gnu_cxx::__to_xstring<std::basic_string<wchar_t>, wchar_t>
-    5m 57.66s  133    std::basic_string<char16_t>
-    5m 45.02s  1      std::basic_regex<char>::basic_regex
- 1065m 57.95s  10152  Other
+   Time  Count  Target
+  303ms  1      std::basic_regex<char>::_M_compile
+  303ms  1      std::basic_regex<char>::basic_regex
+  293ms  1      std::__detail::_Compiler<std::regex_traits<char>>::_Compiler
+  250ms  1      std::__detail::_Compiler<std::regex_traits<char>>::_M_disjunction
+  249ms  1      std::__detail::_Compiler<std::regex_traits<char>>::_M_alternative
+  246ms  1      std::__detail::_Compiler<std::regex_traits<char>>::_M_term
+  207ms  1      std::__detail::_Compiler<std::regex_traits<char>>::_M_atom
+  131ms  2      std::__detail::__regex_algo_impl<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>, std::allocator<std::sub_match<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>>>, char, std::regex_traits<char>>
+  131ms  2      std::regex_search<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>, std::allocator<std::sub_match<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>>>, char, std::regex_traits<char>>
+   81ms  8      std::_Hashtable<std::basic_string<char>, std::pair<const std::basic_string<char>, unsigned long>, std::allocator<std::pair<const std::basic_string<char>, unsigned long>>, std::__detail::_Select1st, std::equal_to<std::basic_string<char>>, std::hash<std::basic_string<char>>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>>::_M_emplace<std::pair<const std::basic_string<char>, unsigned long>>
+   79ms  9      std::unique_ptr<libassert::detail::path_handler>
+   77ms  1      std::regex_replace<std::regex_traits<char>, char, std::char_traits<char>, std::allocator<char>>
+   76ms  1      std::__regex_replace<std::back_insert_iterator<std::basic_string<char>>, __gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>, std::regex_traits<char>, char>
+   76ms  1      std::regex_replace<std::back_insert_iterator<std::basic_string<char>>, __gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>, std::regex_traits<char>, char>
+   67ms  9      std::__uniq_ptr_data<libassert::detail::path_handler, std::default_delete<libassert::detail::path_handler>>
+   67ms  2      std::__detail::_Executor<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>, std::allocator<std::sub_match<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>>>, std::regex_traits<char>, false>::_M_main_dispatch
+   67ms  2      std::__detail::_Executor<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>, std::allocator<std::sub_match<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>>>, std::regex_traits<char>, false>::_M_main
+   67ms  2      std::__detail::_Executor<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>, std::allocator<std::sub_match<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>>>, std::regex_traits<char>, false>::_M_match
+   66ms  9      std::__uniq_ptr_impl<libassert::detail::path_handler, std::default_delete<libassert::detail::path_handler>>
+   66ms  1      std::__detail::_Compiler<std::regex_traits<char>>::_M_insert_character_class_matcher<false, false>
+ 7.369s  2704   Other
 
 Instantiations excluding children:
-        Time  Count  Target
-   5m 47.51s  133    std::basic_string<char16_t>
-   5m 23.19s  133    std::basic_string<char>
-   5m 18.56s  133    std::basic_string<wchar_t>
-   5m 18.18s  133    std::basic_string<char32_t>
-    3m 6.63s  133    std::basic_string<char32_t>::_M_construct<const char32_t *>
-   2m 59.29s  133    std::basic_string<char16_t>::_M_construct<const char16_t *>
-   2m 25.09s  133    std::basic_string<wchar_t>::_M_construct<wchar_t *>
-   1m 48.13s  207    std::operator+<char, std::char_traits<char>, std::allocator<char>>
-   1m 47.50s  37     std::_Hashtable<int, std::pair<const int, int>, std::allocator<std::pair<const int, int>>, std::__detail::_Select1st, std::equal_to<int>, std::hash<int>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<false, false, true>>
-   1m 27.60s  110    std::basic_string<char>::_M_construct<char *>
-   1m 25.82s  133    __gnu_cxx::__to_xstring<std::basic_string<wchar_t>, wchar_t>
-   1m 23.73s  98     std::__str_concat<std::basic_string<char>>
-   1m 20.42s  72     std::chrono::operator<<long, std::ratio<1, 1000000000>, long, std::ratio<1, 1000000000>>
-   1m 20.11s  72     std::chrono::duration<long, std::ratio<1, 1000000000>>
-   1m 18.41s  28     std::optional<std::basic_string<char>>
-   1m 15.90s  37     std::_Hashtable<int, std::pair<const int, int>, std::allocator<std::pair<const int, int>>, std::__detail::_Select1st, std::equal_to<int>, std::hash<int>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<false, false, false>>
-   1m 11.54s  130    __gnu_cxx::__to_xstring<std::basic_string<char>, char>
-    1m 6.88s  10     std::reverse_iterator<std::_Bit_iterator>
-    1m 6.60s  1      test_class<int>::something_else
-    1m 4.88s  133    std::basic_string<wchar_t>::basic_string<wchar_t *, void>
- 282m 26.49s  10152  Other
+  Time  Count  Target
+  27ms  16     std::basic_string<wchar_t>
+  27ms  2      std::regex_traits<char>::lookup_classname<const char *>
+  26ms  16     std::basic_string<char>
+  26ms  16     std::basic_string<char16_t>
+  25ms  16     std::basic_string<char32_t>
+  24ms  10     microfmt::detail::format<4UL>
+  21ms  9      std::optional<std::basic_string<char>>
+  18ms  8      std::_Hashtable<int, std::pair<const int, int>, std::allocator<std::pair<const int, int>>, std::__detail::_Select1st, std::equal_to<int>, std::hash<int>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<false, false, true>>
+  17ms  8      microfmt::detail::format<3UL>
+  17ms  8      std::_Hashtable<std::basic_string<char>, std::pair<const std::basic_string<char>, unsigned long>, std::allocator<std::pair<const std::basic_string<char>, unsigned long>>, std::__detail::_Select1st, std::equal_to<std::basic_string<char>>, std::hash<std::basic_string<char>>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>>::_M_emplace<std::pair<const std::basic_string<char>, unsigned long>>
+  15ms  16     std::basic_string<char16_t>::_M_construct<const char16_t *>
+  15ms  16     std::basic_string<char32_t>::_M_construct<const char32_t *>
+  15ms  9      std::optional<libassert::binary_diagnostics_descriptor>
+  13ms  9      std::tuple<libassert::detail::path_handler *, std::default_delete<libassert::detail::path_handler>>
+  13ms  8      std::_Hashtable<int, std::pair<const int, int>, std::allocator<std::pair<const int, int>>, std::__detail::_Select1st, std::equal_to<int>, std::hash<int>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<false, false, false>>
+  13ms  4      cpptrace::detail::elf_get_module_image_base_from_program_table<64UL>
+  12ms  2      std::_Hashtable<std::basic_string_view<char>, std::basic_string_view<char>, std::allocator<std::basic_string_view<char>>, std::__detail::_Identity, std::equal_to<std::basic_string_view<char>>, std::hash<string_view>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, true, true>>::_M_insert_unique<const std::basic_string_view<char> &, const std::basic_string_view<char> &, std::__detail::_AllocNode<std::allocator<std::__detail::_Hash_node<std::basic_string_view<char>, true>>>>
+  11ms  16     std::basic_string<wchar_t>::_M_construct<wchar_t *>
+  11ms  9      std::variant<cpptrace::raw_trace, cpptrace::stacktrace>
+  11ms  8      std::map<long, long>
+ 973ms  2704   Other
 
 Templates with the most total instantiation time:
-        Time  Count  Target
-  22m 38.78s  1494   std::__and_
-  22m 31.09s  539    std::basic_string
-  21m 53.64s  14     std::vformat_to
-  21m 51.35s  14     std::__format::__do_vformat_to
-  19m 51.30s  722    std::basic_string::basic_string
-  18m 25.89s  112    std::unique_ptr
-  17m 55.99s  6      magic_enum::detail::values
-  17m 46.50s  6      magic_enum::detail::valid_count
-  17m 43.37s  14     std::__format::_Formatting_scanner::_Formatting_scanner
-  17m 15.00s  633    std::vector
-  16m 22.41s  133    libassert::detail::process_assert_fail
-   16m 7.28s  150    libassert::detail::generate_stringification
-  15m 39.62s  46     testing::internal::MatcherBase::MatcherBase
-  15m 34.57s  14     std::__format::_Formatting_scanner::_M_format_arg
-  15m 33.68s  112    std::__uniq_ptr_data
-  15m 33.42s  46     testing::internal::MatcherBase::Init
-  15m 23.25s  112    std::__uniq_ptr_impl
-  15m 15.15s  579    std::basic_string::_M_construct
-  14m 21.00s  559    std::_Destroy
-  13m 43.79s  94     libassert::detail::process_assert_fail_n
- 909m 36.18s  1219   Other
+   Time  Count  Target
+  303ms  1      std::basic_regex::_M_compile
+  303ms  1      std::basic_regex::basic_regex
+  293ms  1      std::__detail::_Compiler::_Compiler
+  250ms  1      std::__detail::_Compiler::_M_disjunction
+  249ms  1      std::__detail::_Compiler::_M_alternative
+  246ms  1      std::__detail::_Compiler::_M_term
+  213ms  43     std::_Hashtable
+  207ms  1      std::__detail::_Compiler::_M_atom
+  199ms  29     std::unordered_map
+  170ms  19     std::_Hashtable::_M_emplace
+  166ms  3      std::__detail::__regex_algo_impl
+  166ms  3      std::regex_search
+  164ms  18     std::unique_ptr
+  157ms  28     std::_Hashtable::_Hashtable
+  155ms  103    std::pair
+  153ms  2      std::regex_replace
+  152ms  137    std::_Destroy
+  142ms  109    std::vector
+  141ms  18     std::__uniq_ptr_data
+  140ms  33     std::vector::emplace_back
+ 6.302s  553    Other
 
 Templates with the most total instantiation time excluding children:
-        Time  Count  Target
-   22m 4.42s  539    std::basic_string
-  14m 36.89s  1494   std::__and_
-  10m 51.96s  579    std::basic_string::_M_construct
-    8m 3.27s  633    std::vector
-   7m 21.64s  587    std::_Vector_base
-    7m 3.55s  729    std::__or_
-   6m 50.65s  473    std::chrono::duration
-   6m 25.01s  332    std::pair
-   6m 15.15s  595    magic_enum::detail::is_valid
-   5m 35.53s  174    std::tuple
-   5m 12.00s  722    std::basic_string::basic_string
-   4m 18.35s  105    std::_Hashtable
-    4m 3.10s  340    __gnu_cxx::__stoa
-   3m 59.38s  42     std::__format::__formatter_fp::format
-   3m 56.18s  158    std::vector::_M_realloc_insert
-   3m 43.30s  266    std::is_destructible
-   3m 22.80s  226    std::_Tuple_impl
-   3m 15.22s  126    std::__format::__formatter_int::format
-    3m 2.12s  112    std::__uniq_ptr_impl
-   2m 59.12s  69     std::optional
- 197m 22.80s  1219   Other
+  Time  Count  Target
+ 104ms  64     std::basic_string
+  84ms  103    std::pair
+  80ms  45     microfmt::detail::format
+  79ms  43     std::_Hashtable
+  59ms  19     std::_Hashtable::_M_emplace
+  43ms  70     std::basic_string::_M_construct
+  43ms  22     std::optional
+  32ms  37     std::vector::_M_realloc_insert
+  27ms  2      std::regex_traits::lookup_classname
+  25ms  40     std::is_trivially_destructible
+  25ms  20     std::tuple
+  24ms  36     std::vector::_S_nothrow_relocate
+  24ms  8      cpptrace::detail::elf_get_module_image_base_from_program_table
+  23ms  109    std::vector
+  23ms  4      std::_Hashtable::_M_insert_unique
+  22ms  301    std::__and_
+  22ms  30     microfmt::detail::do_write
+  20ms  18     std::__uniq_ptr_impl
+  18ms  67     std::is_destructible
+  18ms  33     std::vector::emplace_back
+ 535ms  553    Other
 
 Slow parses:
-       Time  Count  Target
- 17m 56.21s  222    std::vector
- 17m 32.79s  133    std::basic_string
- 14m 50.01s  28     libassert::assertion_info
- 13m 54.29s  272    std::tuple
- 10m 32.36s  72     std::chrono::system_clock
-  9m 27.50s  811    std::numeric_limits
-  8m 14.27s  507    std::char_traits
-  5m 31.98s  49     std::_Rb_tree
-  5m 24.86s  1      test_class
-   5m 1.22s  133    std::basic_string_view
-  4m 33.86s  136    std::pair
-  4m 11.61s  88     std::__atomic_base
-   4m 3.01s  107    std::ios_base
-  3m 54.74s  252    std::_Tuple_impl
-  3m 44.39s  37     std::__detail::_Power2_rehash_policy
-  3m 44.24s  11     std::__detail::_ScannerBase
-  3m 41.32s  28     magic_enum::customize::customize_t
-  3m 10.01s  166    std::allocator_traits
-   3m 6.03s  1      foo
-  2m 56.48s  252    std::hash
- 169m 2.44s  706    Other
+  Time  Count  Target
+ 260ms  9      libassert::assertion_info
+ 172ms  8      std::__detail::_ScannerBase
+ 161ms  1      libassert::detail::analysis
+ 120ms  1      cpptrace::detail::libdwarf::dwarf_resolver
+  91ms  30     std::vector
+  90ms  16     std::basic_string
+  70ms  9      std::chrono::system_clock
+  66ms  32     std::tuple
+  63ms  8      std::_Rb_tree
+  61ms  30     std::__atomic_base
+  55ms  9      std::__detail::_Power2_rehash_policy
+  44ms  1      libassert::detail::tokenizer
+  40ms  1      cpptrace::detail::libdwarf::die_object
+  36ms  9      std::_Hashtable
+  29ms  15     cpptrace::object_trace
+  29ms  80     std::atomic
+  27ms  15     cpptrace::stacktrace
+  27ms  8      std::map
+  25ms  15     cpptrace::raw_trace
+  23ms  16     std::basic_string_view
+ 670ms  187    Other
 
 Slow codegen:
-       Time  Count  Target
-  2m 34.15s  49     std::basic_string<char>::basic_string<std::allocator<char>>
-    59.879s  11     main
-    39.239s  1      test_class<int>::something_else
-    34.047s  13     cpptrace::raw_trace::~raw_trace
-    27.437s  13     std::vector<std::basic_string<char>>::vector
-    25.466s  9      std::basic_string<char>::basic_string<std::basic_string_view<char>, void>
-    20.984s  4      std::vector<std::pair<long, std::vector<std::sub_match<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>>>>>::vector
-    19.864s  7      std::_Rb_tree<std::basic_string<char>, std::pair<const std::basic_string<char>, std::basic_string<char>>, std::_Select1st<std::pair<const std::basic_string<char>, std::basic_string<char>>>, std::less<std::basic_string<char>>>::_Rb_tree
-    19.582s  13     std::vector<unsigned long>::vector
-    19.304s  1      __gnu_cxx::__alloc_traits<std::allocator<std::pair<char, char>>>::_S_select_on_copy
-    17.714s  1      foo::baz
-    16.906s  7      microfmt::detail::format<4UL>
-    13.084s  6      std::map<std::basic_string<char>, std::basic_string<char>>::map
-    11.882s  2      _dwarf_read_line_table_header
-    11.125s  2      std::_Hashtable<std::basic_string<char>, std::pair<const std::basic_string<char>, std::basic_string<char>>, std::allocator<std::pair<const std::basic_string<char>, std::basic_string<char>>>, std::__detail::_Select1st, std::equal_to<std::basic_string<char>>, std::hash<std::basic_string<char>>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>>::_Hashtable
-    11.092s  1      _dwarf_exec_frame_instr
-    11.065s  2      std::vector<libassert::extra_diagnostic>::vector
-    10.748s  1      libassert::detail::analysis::analysis
-    10.629s  3      std::vector<std::pair<std::basic_string<char>, std::basic_string<char>>>::vector
-     10.47s  1      _dwarf_internal_get_pubnames_like
- 35m 52.67s  1621   Other
+  Time  Count  Target
+  29ms  14     std::basic_string<char>::basic_string<std::allocator<char>>
+   9ms  2      read_line_table_program
+   8ms  2      std::unordered_map<std::basic_string<char>, std::basic_string<char>>::unordered_map
+   7ms  4      microfmt::detail::format<6UL>
+   7ms  2      std::vector<std::pair<long, std::vector<std::sub_match<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>>>>>::vector
+   7ms  2      std::_Hashtable<std::basic_string<char>, std::pair<const std::basic_string<char>, std::basic_string<char>>, std::allocator<std::pair<const std::basic_string<char>, std::basic_string<char>>>, std::__detail::_Select1st, std::equal_to<std::basic_string<char>>, std::hash<std::basic_string<char>>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>>::_Hashtable
+   7ms  2      _dwarf_read_line_table_header
+   7ms  1      _dwarf_read_loc_expr_op
+   7ms  1      cpptrace::detail::libdwarf::resolve_frames
+   6ms  6      microfmt::detail::format<4UL>
+   6ms  1      std::allocator_traits<std::allocator<std::__detail::_Hash_node<std::pair<const std::basic_string<char>, std::basic_string<char>>, true>>>::destroy<std::pair<const std::basic_string<char>, std::basic_string<char>>>
+   6ms  1      _dwarf_exec_frame_instr
+   6ms  1      libassert::detail::analysis::analysis
+   5ms  4      microfmt::detail::format<7UL>
+   5ms  7      std::vector<unsigned long>::vector
+   5ms  1      tr_introsort
+   5ms  1      dwarf_debug_addr_table
+   5ms  2      std::vector<std::pair<__gnu_cxx::__normal_iterator<const char *, std::basic_string<char>>, int>>::vector
+   5ms  1      std::_Hashtable<std::basic_string<char>, std::pair<const std::basic_string<char>, std::vector<std::pair<std::reference_wrapper<const cpptrace::object_frame>, std::reference_wrapper<cpptrace::stacktrace_frame>>>>, std::allocator<std::pair<const std::basic_string<char>, std::vector<std::pair<std::reference_wrapper<const cpptrace::object_frame>, std::reference_wrapper<cpptrace::stacktrace_frame>>>>>, std::__detail::_Select1st, std::equal_to<std::basic_string<char>>, std::hash<std::basic_string<char>>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true>>::_Hashtable
+   4ms  1      ZSTD_compressBlock_opt_generic
+ 419ms  666    Other
 ```

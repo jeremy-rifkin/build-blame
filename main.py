@@ -69,11 +69,13 @@ def main():
     parser.add_argument("--exclude-deps", type=bool, default=True)
     parser.add_argument('--exclude', action='append', nargs=1)
     parser.add_argument('--sentinel', action='append', nargs=1)
+    parser.add_argument('-n', type=int, default=20)
     args = parser.parse_args()
 
     project_folder = Path(args.project_folder)
     build_folder = Path(args.build_folder) if args.build_folder is not None else project_folder / "build"
     output_dir = Path(args.output)
+    n = args.n
 
     if os.path.exists(output_dir):
         assert os.path.isdir(output_dir)
@@ -137,35 +139,35 @@ def main():
         return event["name"] == "Source" # and event["args"]["detail"].startswith(os.path.abspath(project_folder))
 
     print("\nSlowest translation unit targets:")
-    print_slow(project.get_slow_targets(is_tu))
+    print_slow(project.get_slow_targets(is_tu, n=n))
     print("\nSlowest link targets:")
-    print_slow(project.get_slow_targets(is_link))
+    print_slow(project.get_slow_targets(is_link, n=n))
     print("\nFrontend/Backend:")
     print_slow(project.get_frontend_backend_totals())
 
     print("\nIncludes:")
-    print_slow(project.get_expensive_trace_events(is_include))
+    print_slow(project.get_expensive_trace_events(is_include, n=n))
 
     print("\nIncludes excluding children:")
-    print_slow(project.get_expensive_trace_events_excluding(is_include))
+    print_slow(project.get_expensive_trace_events_excluding(is_include, n=n))
 
     print("\nInstantiations:")
-    print_slow(project.get_expensive_trace_events(is_instantiation))
+    print_slow(project.get_expensive_trace_events(is_instantiation, n=n))
 
     print("\nInstantiations excluding children:")
-    print_slow(project.get_expensive_trace_events_excluding(is_instantiation))
+    print_slow(project.get_expensive_trace_events_excluding(is_instantiation, n=n))
 
     print("\nTemplates with the most total instantiation time:")
-    print_slow(project.get_expensive_trace_events(is_instantiation, pre_transform=strip_template_parameters_in_event))
+    print_slow(project.get_expensive_trace_events(is_instantiation, pre_transform=strip_template_parameters_in_event, n=n))
 
     print("\nTemplates with the most total instantiation time excluding children:")
-    print_slow(project.get_expensive_trace_events_excluding(is_instantiation, pre_transform=strip_template_parameters_in_event))
+    print_slow(project.get_expensive_trace_events_excluding(is_instantiation, pre_transform=strip_template_parameters_in_event, n=n))
 
     print("\nSlow parses:")
-    print_slow(project.get_expensive_trace_events(is_parse))
+    print_slow(project.get_expensive_trace_events(is_parse, n=n))
 
     print("\nSlow codegen:")
-    print_slow(project.get_expensive_trace_events(is_codegen))
+    print_slow(project.get_expensive_trace_events(is_codegen, n=n))
 
     # print("\nIncludes in project:")
     # print_slow(project.get_expensive_trace_events(is_project_include, 30))

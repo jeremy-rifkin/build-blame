@@ -4,6 +4,7 @@ import os
 import json
 from dataclasses import dataclass
 import logging
+import re
 
 from .dependency_analysis import DependencyAnalysis, parse_search_paths
 
@@ -73,6 +74,10 @@ class DurationAndCount:
     duration: int
     count: int
 
+def parse_output(command: str) -> str:
+    outputs = [x.group(1) for x in re.finditer(r"-o ([^ ]+)", command)]
+    return outputs[0]
+
 class Project:
     def __init__(self, project_folder: Path, build_folder: Path, excludes: list, sentinels: list):
         self.project_folder = project_folder
@@ -98,7 +103,12 @@ class Project:
 
     def get_compile_commands_for(self, target: str):
         for entry in self.compile_commands:
-            if entry["output"] == target:
+            output = ""
+            if "output" in entry:
+                output = entry["output"]
+            else:
+                output = parse_output(entry["command"]).replace(str(self.build_folder), "")
+            if output == target:
                 return entry
         return None
 
@@ -239,7 +249,7 @@ class Project:
                     key = event['args']['detail'] # f"{event['name']}: {event['args']['detail']}"
                     if key not in entries:
                         entries[key] = DurationAndCount(0, 0)
-                    entries[key].duration += event["dur"]
+                    entries[key].duration += event["dur"] // 1000
                     entries[key].count += 1
         return self.get_slow([TimingEntry(value.duration, value.count, key) for key, value in entries.items()], n)
 
@@ -277,6 +287,6 @@ class Project:
                 key = event['args']['detail'] # f"{event['name']}: {event['args']['detail']}"
                 if key not in entries:
                     entries[key] = DurationAndCount(0, 0)
-                entries[key].duration += event["dur"]
+                entries[key].duration += event["dur"] // 1000
                 entries[key].count += 1
         return self.get_slow([TimingEntry(value.duration, value.count, key) for key, value in entries.items()], n)
