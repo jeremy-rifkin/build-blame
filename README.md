@@ -2,10 +2,7 @@
 
 Build-blame is tool to help answer the question: Why are my builds taking so long??
 
-Note: This is very much a work-in-progress. The ease of use is nowhere near what I would consider acceptable for a
-finished project.
-
-Currently it requires a project using ninja and clang and a compile_commands.json file.
+This project is a work-in-progress.
 
 Preview:
 
