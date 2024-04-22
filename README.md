@@ -28,7 +28,8 @@ cmake -B build -S . \
 cmake --build build
 ```
 
-Note: It is important to do this in a clean build folder so ninja's log is clear.
+> [!NOTE]
+> It is important to do this in a clean build folder so ninja's log is clear.
 
 Then
 ```
@@ -49,14 +50,14 @@ The output folder will contain:
   approximating the thread assignments is made. I recommend viewing this in [perfetto](https://ui.perfetto.dev/)
   (speedscope is popular but doesn't show threads side-by-side).
 
-![](screenshots/preview.png)
+![](screenshots/ninja-trace.png)
 
 - `full_trace.json`: Ninja trace + clang time trace info combined into one.
 
 ![](screenshots/full-trace.png)
 
-- `includes.svg`: Include graph. Headers are colored based on the number of TU's transitively including them. Source
-  files are colored by build time.
+- `includes.svg`: Include graph. Headers are colored based on the number of TU's transitively including them (light
+  green -> dark green) and source files are colored by build time (light orange -> dark red).
 
 ![](screenshots/includes.svg)
 
