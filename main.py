@@ -156,6 +156,7 @@ def main():
 
     print("\nIncludes:")
     print_slow(project.get_expensive_trace_events(is_include, n=n))
+    print("Note: Double-counting happens so total time listed here can exceed total build time")
 
     print("\nIncludes excluding children:")
     print_slow(project.get_expensive_trace_events_excluding(is_include, n=n))

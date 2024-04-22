@@ -18,6 +18,8 @@ Prerequisites:
 - cmake
 - ninja
 - clang
+- python3
+- prettytable
 
 In your project
 ```
@@ -34,6 +36,14 @@ cmake -B build -S . \
 Then
 ```
 python3 main.py --project-folder /path/to/project --output out
+```
+
+Other options:
+```
+--build folder  Folder where the cmake build lives (by default project-folder/build)
+--output        Where to output blame info
+--exclude       Exclude paths or files
+-n              Number of entries to show for slow translation units, link targets, includes, instantiations, ...
 ```
 
 ## Example Statistics
@@ -100,6 +110,7 @@ Includes:
    787ms  13     /home/rifkin/projects/libassert/build-clang/_deps/zstd-src/lib/compress/../common/compiler.h
    770ms  15     /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/istream
  34.051s  363    Other
+Note: Double-counting happens so total time listed here can exceed total build time
 
 Includes excluding children:
    Time  Count  Target
