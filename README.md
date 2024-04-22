@@ -4,12 +4,6 @@ Build-blame is tool to help answer the question: Why are my builds taking so lon
 
 This project is a work-in-progress.
 
-Preview:
-
-![](screenshots/preview.png)
-![](screenshots/full-trace.png)
-![](screenshots/includes.svg)
-
 ## How to use:
 
 Prerequisites:
@@ -31,7 +25,10 @@ cmake -B build -S . \
     -GNinja \
     -DCMAKE_CXX_FLAGS=-ftime-trace \
     -DCMAKE_C_FLAGS=-ftime-trace
+cmake --build build
 ```
+
+Note: It is important to do this in a clean build folder so ninja's log is clear.
 
 Then
 ```
@@ -45,6 +42,26 @@ Other options:
 --exclude       Exclude paths or files
 -n              Number of entries to show for slow translation units, link targets, includes, instantiations, ...
 ```
+
+The output folder will contain:
+- `ninja_trace.json`: Approximate trace of how ninja parallelized the build and what targets took a lot of time or
+  blocked others. Ninja's log records time info but it does not record thread assignments, so an attempt at roughly
+  approximating the thread assignments is made. I recommend viewing this in [perfetto](https://ui.perfetto.dev/)
+  (speedscope is popular but doesn't show threads side-by-side).
+
+![](screenshots/preview.png)
+
+- `full_trace.json`: Ninja trace + clang time trace info combined into one.
+
+![](screenshots/full-trace.png)
+
+- `includes.svg`: Include graph. Headers are colored based on the number of TU's transitively including them. Source
+  files are colored by build time.
+
+![](screenshots/includes.svg)
+
+And lastly information on slow translation units, link targets, includes, instantiations, etc. will be written to
+stdout.
 
 ## Example Statistics
 
